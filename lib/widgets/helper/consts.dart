@@ -11,3 +11,6 @@ const Color kBottomNavigatorBarItemColor = Color(0xff9B6C59);
 const String kOnboardingImage1 = 'assets/images/Trip-pana.png';
 const String kOnboardingImage2 = 'assets/images/Trip-amico.png';
 const String kOnboardingImage3 = 'assets/images/Taipei-pana.png';
+
+const String kSignInImage1 = 'assets/images/vector1.svg';
+const String kSignInImage2 = 'assets/images/vector2.svg';

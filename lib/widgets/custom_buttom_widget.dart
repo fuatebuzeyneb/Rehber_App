@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/widgets/text/custom_subtitle_text_widget.dart';
 
 class CustomButtonWidget extends StatelessWidget {

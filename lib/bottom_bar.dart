@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/views/bazar_view.dart';
 import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/views/profile_view.dart';

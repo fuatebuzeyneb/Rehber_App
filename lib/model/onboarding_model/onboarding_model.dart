@@ -1,4 +1,4 @@
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 
 class OnBoardingModel {
   final String title;

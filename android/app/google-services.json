@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538533138606",
+    "project_id": "rehber-e25a5",
+    "storage_bucket": "rehber-e25a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538533138606:android:ac170fc53837c5919d1d3f",
+        "android_client_info": {
+          "package_name": "com.example.travel_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsgI_hEiOsyBctBP4Bc8qCI2LNnTiWAH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

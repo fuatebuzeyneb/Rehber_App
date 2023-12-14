@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/model/onboarding_model/onboarding_model.dart';
+import 'package:travel_app/views/auth_views/signup_view.dart';
+import 'package:travel_app/views/auth_views/signin_view.dart';
 import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/custom_buttom_widget.dart';
+import 'package:travel_app/widgets/services/functions/on_boarding_visited_fun.dart';
 import 'package:travel_app/widgets/text/custom_subtitle_text_widget.dart';
 import 'package:travel_app/widgets/text/custom_title_text_widget.dart';
 
@@ -55,7 +58,9 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, Homeview.id);
+                                  OnBoardingVisitedFun();
+                                  Navigator.pushReplacementNamed(
+                                      context, Homeview.id);
                                 },
                                 child: CustomSubTitleTextWidget(
                                     title: currentIndex ==
@@ -91,7 +96,8 @@ class _OnBoardingViewState extends State<OnBoardingView> {
               CustomButtonWidget(
                   onTap: () {
                     if (currentIndex == onboardingContact.length - 1) {
-                      Navigator.pushNamed(context, Homeview.id);
+                      OnBoardingVisitedFun();
+                      Navigator.pushReplacementNamed(context, SignUpView.id);
                     } else {
                       _controller.nextPage(
                           duration: const Duration(milliseconds: 300),
@@ -105,7 +111,10 @@ class _OnBoardingViewState extends State<OnBoardingView> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  OnBoardingVisitedFun();
+                  Navigator.pushReplacementNamed(context, SignInView.id);
+                },
                 child: Text(
                   currentIndex == onboardingContact.length - 1
                       ? 'Login Now'

@@ -1,10 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:travel_app/views/home_view.dart';
-import 'package:travel_app/views/onboarding_view.dart';
 import 'package:travel_app/views/splash_view.dart';
 
-void main() {
+import 'package:travel_app/widgets/helper/cache_helper.dart';
+import 'package:travel_app/widgets/services/routes.dart';
+import 'package:travel_app/widgets/services/service_locator.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      print('User is signed in!');
+    }
+  });
+  setupServiceLocator();
+  await getIt<CacheHelper>().init();
   runApp(const MyApp());
 }
 
@@ -16,11 +33,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        Homeview.id: (context) => const Homeview(),
-        SplashView.id: (context) => const SplashView(),
-        OnBoardingView.id: (context) => const OnBoardingView(),
-      },
+      routes: routes,
       initialRoute: SplashView.id,
     );
   }

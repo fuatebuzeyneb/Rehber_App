@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/widgets/appbar/custom_appbar_widget.dart';
 
 class ProfileView extends StatelessWidget {

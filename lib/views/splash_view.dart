@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/views/auth_views/signin_view.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/views/onboarding_view.dart';
+
+import '../widgets/helper/cache_helper.dart';
+import '../widgets/services/service_locator.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -19,7 +23,13 @@ class _SplashViewState extends State<SplashView>
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushNamed(context, OnBoardingView.id);
+      bool isOnBoardingVisited =
+          getIt<CacheHelper>().getData(key: 'isOnBoardingVisited') ?? false;
+      if (isOnBoardingVisited == true) {
+        Navigator.pushReplacementNamed(context, SignInView.id);
+      } else {
+        Navigator.pushReplacementNamed(context, OnBoardingView.id);
+      }
     });
   }
 

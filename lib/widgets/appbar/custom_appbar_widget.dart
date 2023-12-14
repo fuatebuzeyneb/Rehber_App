@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/consts.dart';
+import 'package:travel_app/widgets/helper/consts.dart';
 
 class CustomAppBarWidget extends StatelessWidget
     implements PreferredSizeWidget {
@@ -7,6 +7,7 @@ class CustomAppBarWidget extends StatelessWidget
   final double height;
   final IconData? leadingIcon;
   final IconData? actionIcon;
+  final double fontSize;
 
   const CustomAppBarWidget({
     super.key,
@@ -14,6 +15,7 @@ class CustomAppBarWidget extends StatelessWidget
     this.height = kToolbarHeight,
     this.leadingIcon,
     this.actionIcon,
+    this.fontSize = 18,
   });
 
   @override
@@ -33,8 +35,8 @@ class CustomAppBarWidget extends StatelessWidget
             const Spacer(),
             Text(
               title,
-              style: const TextStyle(
-                  fontSize: 18,
+              style: TextStyle(
+                  fontSize: fontSize,
                   color: kPrimaryColorDark,
                   fontWeight: FontWeight.bold),
             ),
