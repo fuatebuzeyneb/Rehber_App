@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:travel_app/cubits/auth_cubit/auth_cubit.dart';
 import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/custom_check_box_widget.dart';
@@ -9,68 +8,81 @@ import 'package:travel_app/views/auth_views/signin_view.dart';
 import 'package:travel_app/widgets/appbar/custom_appbar_widget.dart';
 import 'package:travel_app/widgets/custom_buttom_widget.dart';
 import 'package:travel_app/widgets/custom_text_field_widget.dart';
+import 'package:travel_app/widgets/services/functions/toast_msg.dart';
 import 'package:travel_app/widgets/text/custom_title_text_widget.dart';
 
-class SignUpFormWidget extends StatefulWidget {
+class SignUpFormWidget extends StatelessWidget {
   const SignUpFormWidget({
     super.key,
   });
 
   @override
-  State<SignUpFormWidget> createState() => _SignUpFormWidgetState();
-}
-
-class _SignUpFormWidgetState extends State<SignUpFormWidget> {
-  bool isLoading = false;
-  GlobalKey<FormState> formKey = GlobalKey();
-  @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocConsumer<AuthCubit, AuthState>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          toastMsg(errorMsg: 'An account has been created');
+          Navigator.pushReplacementNamed(context, Homeview.id);
+        } else if (state is AuthFailure) {
+          toastMsg(errorMsg: state.errorMsg);
+        }
+      },
       builder: (context, state) {
-        return ModalProgressHUD(
-          progressIndicator: const CircularProgressIndicator(
-            color: kPrimaryColor,
-          ),
-          color: kPrimaryColorDark,
-          inAsyncCall: isLoading,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+        AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SingleChildScrollView(
             child: Form(
-              key: formKey,
+              key: authCubit.formKeyForSignUp,
               child: Column(
                 children: [
-                  const Spacer(
-                    flex: 2,
+                  SizedBox(
+                    height: size.height * 0.12,
                   ),
                   const CustomAppBarWidget(
                     title: 'Welcome !',
                     fontSize: 32,
                   ),
-                  const Spacer(
-                    flex: 1,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                   CustomTextFieldWidget(
                     onChanged: (value) {
-                      BlocProvider.of<AuthCubit>(context).name = value;
+                      authCubit.name = value;
                     },
                     label: 'First Name',
                   ),
                   CustomTextFieldWidget(
                     onChanged: (value) {
-                      BlocProvider.of<AuthCubit>(context).lastName = value;
+                      authCubit.lastName = value;
                     },
                     label: 'Last Name',
                   ),
                   CustomTextFieldWidget(
                     onChanged: (value) {
-                      BlocProvider.of<AuthCubit>(context).email = value;
+                      authCubit.email = value;
                     },
                     label: 'Email Address',
                   ),
                   CustomTextFieldWidget(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        BlocProvider.of<AuthCubit>(context)
+                            .obscurePasswordText();
+                      },
+                      icon: authCubit.obscurePasswordTextValue == false
+                          ? const Icon(
+                              Icons.visibility_off,
+                              color: kPrimaryColor,
+                            )
+                          : const Icon(
+                              Icons.visibility,
+                              color: kPrimaryColor,
+                            ),
+                    ),
                     onChanged: (value) {
-                      BlocProvider.of<AuthCubit>(context).password = value;
+                      authCubit.password = value;
                     },
                     label: 'Password',
                   ),
@@ -93,24 +105,25 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                       )
                     ],
                   ),
-                  const Spacer(
-                    flex: 2,
+                  SizedBox(
+                    height: size.height * 0.06,
                   ),
-                  CustomButtonWidget(
-                      title: 'Sign Up',
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          isLoading = true;
-                          setState(() {});
-
-                          BlocProvider.of<AuthCubit>(context)
-                              .signUpUserWithEmailAndPassword();
-                          Navigator.pushReplacementNamed(context, Homeview.id);
-
-                          isLoading = false;
-                          setState(() {});
-                        } else {}
-                      }),
+                  state is AuthLoading
+                      ? const CircularProgressIndicator()
+                      : CustomButtonWidget(
+                          title: 'Sign Up',
+                          onTap: () {
+                            if (authCubit.formKeyForSignUp.currentState!
+                                    .validate() &&
+                                authCubit.termsAndConditionCheckVox == true) {
+                              BlocProvider.of<AuthCubit>(context)
+                                  .signUpUserWithEmailAndPassword();
+                            } else {
+                              toastMsg(
+                                  errorMsg:
+                                      'You must agree to the terms and condition');
+                            }
+                          }),
                   const SizedBox(
                     height: 10,
                   ),
@@ -134,9 +147,6 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                       ),
                     ],
                   ),
-                  const Spacer(
-                    flex: 1,
-                  )
                 ],
               ),
             ),

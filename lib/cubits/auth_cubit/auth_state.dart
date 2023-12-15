@@ -10,7 +10,11 @@ final class AuthLoading extends AuthState {}
 final class AuthSuccess extends AuthState {}
 
 final class AuthFailure extends AuthState {
-  final String errorMas;
+  final String errorMsg;
 
-  AuthFailure(this.errorMas);
+  AuthFailure(this.errorMsg);
 }
+
+final class TermsAndConditionUpdateCheckVoxState extends AuthState {}
+
+final class ObscurePasswordTextUpdateState extends AuthState {}

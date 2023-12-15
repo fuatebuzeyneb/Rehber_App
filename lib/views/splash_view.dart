@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:travel_app/views/auth_views/signin_view.dart';
+import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/views/onboarding_view.dart';
 
@@ -26,7 +28,9 @@ class _SplashViewState extends State<SplashView>
       bool isOnBoardingVisited =
           getIt<CacheHelper>().getData(key: 'isOnBoardingVisited') ?? false;
       if (isOnBoardingVisited == true) {
-        Navigator.pushReplacementNamed(context, SignInView.id);
+        FirebaseAuth.instance.currentUser == null
+            ? Navigator.pushReplacementNamed(context, SignInView.id)
+            : Navigator.pushReplacementNamed(context, Homeview.id);
       } else {
         Navigator.pushReplacementNamed(context, OnBoardingView.id);
       }

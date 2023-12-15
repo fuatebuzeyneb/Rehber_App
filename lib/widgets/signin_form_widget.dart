@@ -4,35 +4,34 @@ import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travel_app/widgets/services/functions/toast_msg.dart';
 import '../../widgets/appbar/custom_appbar_widget.dart';
 import '../../widgets/custom_buttom_widget.dart';
 import '../../widgets/custom_text_field_widget.dart';
 import '../../widgets/text/custom_title_text_widget.dart';
 
-class SignInFormWidget extends StatefulWidget {
+class SignInFormWidget extends StatelessWidget {
   const SignInFormWidget({
     super.key,
   });
 
   @override
-  State<SignInFormWidget> createState() => _SignInFormWidgetState();
-}
-
-class _SignInFormWidgetState extends State<SignInFormWidget> {
-  bool isLoading = false;
-  GlobalKey<FormState> formKey = GlobalKey();
-  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        // TODO: implement listener
+        if (state is AuthSuccess) {
+          Navigator.pushReplacementNamed(context, Homeview.id);
+        } else if (state is AuthFailure) {
+          toastMsg(errorMsg: state.errorMsg);
+        }
       },
       builder: (context, state) {
+        AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
-            key: formKey,
+            key: authCubit.formKeyForSignIn,
             child: Column(
               children: [
                 const SizedBox(
@@ -52,6 +51,19 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
                   label: 'Email Address',
                 ),
                 CustomTextFieldWidget(
+                  suffixIcon: IconButton(
+                      onPressed: () {
+                        authCubit.obscurePasswordText();
+                      },
+                      icon: authCubit.obscurePasswordTextValue == true
+                          ? const Icon(
+                              Icons.visibility,
+                              color: kPrimaryColor,
+                            )
+                          : const Icon(
+                              Icons.visibility_off,
+                              color: kPrimaryColor,
+                            )),
                   onChanged: (value) {
                     BlocProvider.of<AuthCubit>(context).password = value;
                   },
@@ -73,23 +85,17 @@ class _SignInFormWidgetState extends State<SignInFormWidget> {
                 SizedBox(
                   height: size.height * 0.16,
                 ),
-                CustomButtonWidget(
-                    title: isLoading == false
-                        ? 'Sign In'
-                        : 'isLoading Please wait',
-                    onTap: () {
-                      if (formKey.currentState!.validate()) {
-                        isLoading = true;
-                        setState(() {});
-
-                        BlocProvider.of<AuthCubit>(context)
-                            .signInUserWithEmailAndPassword();
-                        Navigator.pushReplacementNamed(context, Homeview.id);
-
-                        isLoading = false;
-                        setState(() {});
-                      } else {}
-                    }),
+                state is AuthLoading
+                    ? const CircularProgressIndicator()
+                    : CustomButtonWidget(
+                        title: 'Sign In',
+                        onTap: () {
+                          if (authCubit.formKeyForSignIn.currentState!
+                              .validate()) {
+                            BlocProvider.of<AuthCubit>(context)
+                                .signInUserWithEmailAndPassword();
+                          } else {}
+                        }),
                 const SizedBox(
                   height: 10,
                 ),

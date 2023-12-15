@@ -1,20 +1,24 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
-  late String? name;
-  late String? lastName;
-  late String? email;
-  late String? password;
+  String? name;
+  String? lastName;
+  String? email;
+  String? password;
+  GlobalKey<FormState> formKeyForSignUp = GlobalKey();
+  GlobalKey<FormState> formKeyForSignIn = GlobalKey();
+  bool? obscurePasswordTextValue = true;
+  bool? termsAndConditionCheckVox;
   Future<void> signUpUserWithEmailAndPassword() async {
     try {
       emit(AuthLoading());
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!,
         password: password!,
       );
@@ -30,14 +34,16 @@ class AuthCubit extends Cubit<AuthState> {
         );
       }
     } catch (e) {
-      print(e);
+      // emit(
+      //   AuthFailure(e.toString()),
+      // );
     }
   }
 
   Future<void> signInUserWithEmailAndPassword() async {
     try {
       emit(AuthLoading());
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
       emit(AuthSuccess());
     } on FirebaseAuthException catch (e) {
@@ -51,7 +57,23 @@ class AuthCubit extends Cubit<AuthState> {
         );
       }
     } catch (e) {
-      print(e);
+      // emit(
+      //   AuthFailure(e.toString()),
+      // );
     }
+  }
+
+  updateTermsAndConditionCheckVox({required newValue}) {
+    termsAndConditionCheckVox = newValue;
+    emit(TermsAndConditionUpdateCheckVoxState());
+  }
+
+  void obscurePasswordText() {
+    if (obscurePasswordTextValue == true) {
+      obscurePasswordTextValue = false;
+    } else {
+      obscurePasswordTextValue = true;
+    }
+    emit(ObscurePasswordTextUpdateState());
   }
 }
