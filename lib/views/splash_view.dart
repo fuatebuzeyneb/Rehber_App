@@ -30,7 +30,9 @@ class _SplashViewState extends State<SplashView>
       if (isOnBoardingVisited == true) {
         FirebaseAuth.instance.currentUser == null
             ? Navigator.pushReplacementNamed(context, SignInView.id)
-            : Navigator.pushReplacementNamed(context, Homeview.id);
+            : FirebaseAuth.instance.currentUser!.emailVerified == true
+                ? Navigator.pushReplacementNamed(context, Homeview.id)
+                : Navigator.pushReplacementNamed(context, SignInView.id);
       } else {
         Navigator.pushReplacementNamed(context, OnBoardingView.id);
       }

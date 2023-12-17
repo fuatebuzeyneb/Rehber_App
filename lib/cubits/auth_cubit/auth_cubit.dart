@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,58 +13,99 @@ class AuthCubit extends Cubit<AuthState> {
   String? password;
   GlobalKey<FormState> formKeyForSignUp = GlobalKey();
   GlobalKey<FormState> formKeyForSignIn = GlobalKey();
+  GlobalKey<FormState> formKeyForForgotPassword = GlobalKey();
   bool? obscurePasswordTextValue = true;
   bool? termsAndConditionCheckVox;
+
   Future<void> signUpUserWithEmailAndPassword() async {
     try {
-      emit(AuthLoading());
+      emit(SignUpLoading());
 
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email!,
         password: password!,
       );
-      emit(AuthSuccess());
+      await addUser();
+      await verifyEmail();
+      emit(SignUpSuccess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         emit(
-          AuthFailure('The password provided is too weak'),
+          SignUpFailure('The password provided is too weak'),
         );
       } else if (e.code == 'email-already-in-use') {
         emit(
-          AuthFailure('The account already exists for that email.'),
+          SignUpFailure('The account already exists for that email.'),
+        );
+      } else if (e.code == 'invalid-email') {
+        emit(
+          SignUpFailure('The email is invalid.'),
+        );
+      } else {
+        emit(
+          SignInFailure(e.code),
         );
       }
     } catch (e) {
       // emit(
-      //   AuthFailure(e.toString()),
+      //   SignUpFailure(e.toString()),
       // );
     }
   }
 
   Future<void> signInUserWithEmailAndPassword() async {
     try {
-      emit(AuthLoading());
+      emit(SignInLoading());
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
-      emit(AuthSuccess());
+      emit(SignInSuccess());
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         emit(
-          AuthFailure('No user found for that email.'),
+          SignInFailure('No user found for that email.'),
         );
       } else if (e.code == 'wrong-password') {
         emit(
-          AuthFailure('Wrong password provided for that user.'),
+          SignInFailure('Wrong password provided for that user.'),
+        );
+      } else {
+        emit(
+          SignInFailure('Check your email and password.'),
         );
       }
     } catch (e) {
       // emit(
-      //   AuthFailure(e.toString()),
+      //   SignInFailure(e.toString()),
       // );
     }
   }
 
-  updateTermsAndConditionCheckVox({required newValue}) {
+  Future<void> verifyEmail() async {
+    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+  }
+
+  Future<void> sendLinkToEmailForForgotPassword() async {
+    try {
+      emit(ForgotPasswordLoading());
+      FirebaseAuth.instance.sendPasswordResetEmail(email: email!);
+      emit(ForgotPasswordSuccess());
+    } catch (e) {
+      emit(ForgotPasswordFailure('This email does not exist'));
+    }
+  }
+
+  Future<void> addUser() async {
+    // Call the user's CollectionReference to add a new user
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.add({
+      'email': email,
+      'first_name': name, // John Doe
+      'last_name': lastName,
+      'password': password, // Stokes and Sons
+    });
+  }
+
+  void updateTermsAndConditionCheckVox({required newValue}) {
     termsAndConditionCheckVox = newValue;
     emit(TermsAndConditionUpdateCheckVoxState());
   }

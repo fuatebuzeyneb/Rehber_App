@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:travel_app/cubits/auth_cubit/auth_cubit.dart';
-import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/custom_check_box_widget.dart';
 import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/views/auth_views/signin_view.dart';
@@ -21,10 +20,12 @@ class SignUpFormWidget extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
-          toastMsg(errorMsg: 'An account has been created');
-          Navigator.pushReplacementNamed(context, Homeview.id);
-        } else if (state is AuthFailure) {
+        if (state is SignUpSuccess) {
+          toastMsg(
+              errorMsg:
+                  'Successfully, check your email to verify your account');
+          Navigator.pushReplacementNamed(context, SignInView.id);
+        } else if (state is SignUpFailure) {
           toastMsg(errorMsg: state.errorMsg);
         }
       },
@@ -108,16 +109,15 @@ class SignUpFormWidget extends StatelessWidget {
                   SizedBox(
                     height: size.height * 0.06,
                   ),
-                  state is AuthLoading
+                  state is SignUpLoading
                       ? const CircularProgressIndicator()
                       : CustomButtonWidget(
                           title: 'Sign Up',
-                          onTap: () {
+                          onTap: () async {
                             if (authCubit.formKeyForSignUp.currentState!
                                     .validate() &&
                                 authCubit.termsAndConditionCheckVox == true) {
-                              BlocProvider.of<AuthCubit>(context)
-                                  .signUpUserWithEmailAndPassword();
+                              await authCubit.signUpUserWithEmailAndPassword();
                             } else {
                               toastMsg(
                                   errorMsg:

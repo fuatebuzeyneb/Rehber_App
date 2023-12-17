@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:travel_app/bottom_bar.dart';
 import 'package:travel_app/cubits/auth_cubit/auth_cubit.dart';
+import 'package:travel_app/views/auth_views/forgot_password_view.dart';
 import 'package:travel_app/views/auth_views/signup_view.dart';
-import 'package:travel_app/views/home_view.dart';
 import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,17 +19,19 @@ class SignInFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
-          Navigator.pushReplacementNamed(context, Homeview.id);
-        } else if (state is AuthFailure) {
+        if (state is SignInSuccess) {
+          FirebaseAuth.instance.currentUser!.emailVerified
+              ? Navigator.pushReplacementNamed(context, BottomBar.id)
+              : toastMsg(errorMsg: 'Please check your email inbox');
+        } else if (state is SignInFailure) {
           toastMsg(errorMsg: state.errorMsg);
         }
       },
       builder: (context, state) {
-        AuthCubit authCubit = BlocProvider.of<AuthCubit>(context);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Form(
@@ -72,28 +76,33 @@ class SignInFormWidget extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CustomTitleTextWidget(
-                      title: 'Forget Password?',
-                      color: kPrimaryColorDark,
-                      fontSize: 14,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                            context, ForgotPasswordView.id);
+                      },
+                      child: const CustomTitleTextWidget(
+                        title: 'Forget Password?',
+                        color: kPrimaryColorDark,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(
                   height: size.height * 0.16,
                 ),
-                state is AuthLoading
+                state is SignInLoading
                     ? const CircularProgressIndicator()
                     : CustomButtonWidget(
                         title: 'Sign In',
-                        onTap: () {
+                        onTap: () async {
                           if (authCubit.formKeyForSignIn.currentState!
                               .validate()) {
-                            BlocProvider.of<AuthCubit>(context)
-                                .signInUserWithEmailAndPassword();
+                            await authCubit.signInUserWithEmailAndPassword();
                           } else {}
                         }),
                 const SizedBox(
