@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:travel_app/model/historical_periodes_model.dart';
 
 class CustomPeriodCardWidget extends StatelessWidget {
-  const CustomPeriodCardWidget({super.key});
-
+  const CustomPeriodCardWidget(
+      {super.key, required this.historicalPeriodsModel});
+  final HistoricalPeriodsModel historicalPeriodsModel;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -17,9 +19,9 @@ class CustomPeriodCardWidget extends StatelessWidget {
             children: [
               SizedBox(
                 width: size.width * 0.22,
-                child: const Text(
+                child: Text(
                   textAlign: TextAlign.center,
-                  'Selahaddin Eyyubi El Kurdi',
+                  historicalPeriodsModel.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -30,7 +32,7 @@ class CustomPeriodCardWidget extends StatelessWidget {
               Card(
                 clipBehavior: Clip.antiAlias,
                 child: Image.network(
-                  'https://upload.wikimedia.org/wikipedia/commons/c/cc/Selahaddin_Eyyubi_El_Kurdi.jpg',
+                  historicalPeriodsModel.image,
                   height: size.width * 0.3,
                   width: size.width * 0.18,
                   fit: BoxFit.fill,

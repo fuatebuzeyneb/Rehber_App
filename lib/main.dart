@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_app/bottom_bar.dart';
+import 'package:travel_app/views/home_view.dart';
 
 import 'package:travel_app/widgets/helper/cache_helper.dart';
 import 'package:travel_app/widgets/services/routes.dart';
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: routes,
-      initialRoute: BottomBar.id,
+      initialRoute: Homeview.id,
     );
   }
 }

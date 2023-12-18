@@ -36,7 +36,7 @@ class Homeview extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    CustomTitleTextWidget(title: 'Historical Periods'),
+                    CustomTitleTextWidget(title: 'Historical Characters'),
                   ],
                 ),
                 SizedBox(

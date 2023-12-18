@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:travel_app/model/historical_characters_model.dart';
 
 class CustomCharactersCardWidget extends StatelessWidget {
-  const CustomCharactersCardWidget({super.key});
-
+  const CustomCharactersCardWidget(
+      {super.key, required this.historicalCharacters});
+  final HistoricalCharacters historicalCharacters;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -19,15 +21,15 @@ class CustomCharactersCardWidget extends StatelessWidget {
                 widthFactor: 1.0,
                 heightFactor: 1.0,
                 child: Image.network(
-                  'https://cdnb.artstation.com/p/assets/images/images/028/911/163/large/mohamed-sax-saladin.jpg?1595889577',
+                  historicalCharacters.image,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
               child: Text(
-                'Selahaddin',
+                historicalCharacters.name,
               ),
             ),
           ],
