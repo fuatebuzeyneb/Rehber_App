@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:travel_app/cubits/add_to_firebase/add_to_firebase_cubit.dart';
+import 'package:travel_app/cubits/home_cubit/home_cubit.dart';
 import 'package:travel_app/widgets/helper/consts.dart';
 import 'package:travel_app/views/bazar_view.dart';
 import 'package:travel_app/views/home_view.dart';
@@ -13,9 +16,15 @@ class BottomBar extends StatelessWidget {
   static String id = 'BottomBar';
   List<Widget> _buildScreens() {
     return [
-      const Homeview(),
+      BlocProvider(
+        create: (context) => HomeCubit(),
+        child: const Homeview(),
+      ),
       const BazarView(),
-      const SearchView(),
+      BlocProvider(
+        create: (context) => AddToFirebaseCubit(),
+        child: const SearchView(),
+      ),
       const ProfileView(),
     ];
   }

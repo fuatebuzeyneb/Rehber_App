@@ -13,6 +13,7 @@ const String kOnboardingImage2 = 'assets/images/Trip-amico.png';
 const String kOnboardingImage3 = 'assets/images/Taipei-pana.png';
 
 const String kForgotPassword = 'assets/images/Forgot-password-bro.png';
+const String kErrorImage = 'assets/images/error.svg';
 
 const String kSignInImage1 = 'assets/images/vector1.svg';
 const String kSignInImage2 = 'assets/images/vector2.svg';

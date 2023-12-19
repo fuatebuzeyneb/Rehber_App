@@ -12,8 +12,8 @@ class ShimmerWidget extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: size.width * 0.45,
-          height: double.infinity,
+          width: size.width * 0.47,
+          height: size.width * 0.27,
           child: Shimmer.fromColors(
             baseColor: Colors.grey.withOpacity(0.3),
             highlightColor: Colors.white.withOpacity(0.5),
@@ -23,8 +23,8 @@ class ShimmerWidget extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: size.width * 0.5,
-          height: double.infinity,
+          width: size.width * 0.47,
+          height: size.width * 0.27,
           child: Shimmer.fromColors(
             baseColor: Colors.grey.withOpacity(0.3),
             highlightColor: Colors.white.withOpacity(0.5),
@@ -32,8 +32,50 @@ class ShimmerWidget extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-        )
+        ),
       ],
     );
   }
 }
+
+
+/*
+return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 164.0,
+          height: 96.0,
+          child: Shimmer.fromColors(
+            baseColor: AppColors.grey,
+            highlightColor: Colors.white,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.grey,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        SizedBox(
+          width: 164.0,
+          height: 96.0,
+          child: Shimmer.fromColors(
+            baseColor: AppColors.grey,
+            highlightColor: Colors.white,
+            child: Container(
+              width: 100,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.grey,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+*/
